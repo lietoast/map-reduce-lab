@@ -8,10 +8,10 @@ import (
 // LocalFileReader 本地文件读取器
 // 从本地文件中读取数据, 以供后续处理
 type LocalFileReader struct {
-	Path      string // 文件路径
-	Offset    int64  // 文件偏移量
-	BlockSize int64  // 需要读取的数据量
-	Result    string // 读取到的最终数据
+	Path      string   // 文件路径
+	Offset    int64    // 文件偏移量
+	BlockSize int64    // 需要读取的数据量
+	Result    []string // 读取到的最终数据
 }
 
 func (lfr *LocalFileReader) Read() int64 {
@@ -48,8 +48,18 @@ func (lfr *LocalFileReader) Read() int64 {
 		// 追加数据
 		data = append(data, buff[:n]...)
 	}
-	lfr.Result = string(data)
+	lfr.Result = append(lfr.Result, string(data))
 
 	// 返回实际读取到的数据量
 	return count
+}
+
+func (lfr *LocalFileReader) Next() string {
+	if lfr.Result == nil || len(lfr.Result) <= 0 {
+		return ""
+	}
+
+	result := lfr.Result[0]
+	lfr.Result = lfr.Result[1:]
+	return result
 }

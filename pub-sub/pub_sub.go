@@ -1,4 +1,4 @@
-package pubsub
+package pub_sub
 
 import "sync"
 
@@ -56,5 +56,15 @@ func (r *Radio) Publish(topic interface{}, content interface{}) {
 			continue
 		}
 		sub <- content
+	}
+}
+
+// Close 关闭所有频道
+func (r *Radio) Close() {
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+
+	for sub := range r.channels {
+		close(sub)
 	}
 }

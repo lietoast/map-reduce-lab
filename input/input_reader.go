@@ -6,4 +6,6 @@ type InputReader interface {
 	// Read 读取数据
 	// 返回读取到的数据量(Byte), 如发生错误, 返回-1
 	Read() int64
+	// Next 获取下一条数据
+	Next() string
 }
