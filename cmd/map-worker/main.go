@@ -88,6 +88,6 @@ func main() {
 		wg.Wait()
 		map_workder.ReportComplete(int(workerID)) // 向master报告任务完成
 	default:
-		map_workder.ReportError(os.Args[1], err.Error(), map_workder.Unknown, int(workerID))
+		map_workder.ReportError(os.Args[1], err.Error(), 0, int(workerID))
 	}
 }

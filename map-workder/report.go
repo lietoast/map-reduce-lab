@@ -13,7 +13,7 @@ const (
 
 // ReportError 汇报执行错误
 // 调用一次gRPC, 向master汇报当前进程发生的错误信息、错误代码、当前进程的ID等信息
-func ReportError(masterAddr, errMsg string, errID ErrID, workerID int) {
+func ReportError(masterAddr, errMsg string, errID int, workerID int) {
 	// 待完成
 }
 

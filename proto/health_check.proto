@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+option go_package = "./pb";
+
+// 检查制定服务的健康状况, 主要用于master对worker进行心跳检查
+
+// Ping 健康检测请求
+message Ping {}
+
+// 健康状况评估
+// IDLE = 等待任务
+// IN_PROGRESS = 正在处理任务
+// COMPLETED = 已经处理完任务
+// LAST_BREATH = 发生错误, 奄奄一息
+enum HealthStatus {
+    IDLE = 0;
+    IN_PROGRESS = 1;
+    COMPLETED = 2;
+    LAST_BREATH = 3;
+}
+
+// Pong 健康检测回应
+message Pong {
+    HealthStatus status = 1;
+}
+
+service HealthCheckService {
+    rpc Check(Ping) returns (Pong);
+}

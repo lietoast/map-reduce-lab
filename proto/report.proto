@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+import "health_check.proto";
+
+option go_package = "./pb";
+
+// worker进程在运行过程中或任务处理完成后, 主动向master进程汇报
+// 当前任务处理的情况
+
+// 错误类别
+enum ExceptionType {
+    // 输入数据有Map函数无法处理的奇点
+    // 当ExceptionType为FAULTY_INPUT时
+    // ExceptionInfo必须包含发生错误处的偏移量(即foffset)
+    FAULTY_INPUT = 0;
+    UNKNOW = 1;
+}
+
+// 错误现场信息
+message ExceptionSite {
+    int64 foffset = 1; // faulty file offset
+}
+
+// 任务执行过程中, 发生的错误情况
+message ExceptionInfo {
+    ExceptionType type = 1; // 错误ID
+    ExceptionSite site = 2; // 错误说明
+}
+
+// worker对master的请求
+message ReportRequest {
+    int32 workerID = 1;
+    HealthStatus status = 2;
+    ExceptionInfo info = 3;
+}
+
+// maseter针对worker的请求给出回复
+message ReportResonse {
+    string masterInstruction = 1;
+}
+
+service ReportService {
+    rpc report(ReportRequest) returns (ReportResonse);
+}
